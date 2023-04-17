@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {isEmpty} from "lodash";
 
 const baseUrl = 'https://eyup-fakebook-default-rtdb.europe-west1.firebasedatabase.app';
 
@@ -6,7 +7,7 @@ const transformFirebaseData = (data) => data
   ? Object.keys(data).map((key) => ({ ...data[key], id: key }))
   : [];
 
-export const getPostsApi = new Promise((resolve, reject) => {
+export const getPostsApi = () => new Promise((resolve, reject) => {
   axios({
     url: `${baseUrl}/posts.json`,
     method: 'get',
@@ -27,7 +28,8 @@ export const deletePostApi = (id) => axios({
 });
 
 export const likePost = (post, username) => new Promise((resolve, reject) => {
-  const likesSet = new Set([...post.likes, username]);
+  const oldLikes = !isEmpty(post.likes) ? post.likes : [];
+  const likesSet = new Set([...oldLikes, username]);
   const updatedLikes = Array.from(likesSet);
   axios({
     method: 'patch',
