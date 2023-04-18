@@ -1,28 +1,15 @@
-import PostCard from "./PostCard";
-import {useEffect, useState} from "react";
-import PostInput from "./PostInput";
-import {getPostsApi} from "./firebase-client";
+
+import Router from "./Router";
+import {BrowserRouter} from "react-router-dom";
 
 const App = () => {
 
-
-  let [postList, updatePostList] = useState([]);
-
-  const getPosts = () => {
-    getPostsApi().then(updatePostList);
-  }
-
-  useEffect(() => {
-      getPosts()},[]
-  )
-
-
-  return (
-      <>
-        <PostInput getPosts={getPosts}/>
-        {postList.map((post, i) => <PostCard key={i} post={post} getPosts={getPosts}/>).reverse()}
-      </>
-  );
+    return (
+        <BrowserRouter>
+            <Router/>
+        </BrowserRouter>
+    );
 };
+
 
 export default App;

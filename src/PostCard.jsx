@@ -1,23 +1,57 @@
-import {Button, Card, Typography} from "@mui/material";
-import {deletePostApi, likePost} from "./firebase-client";
+import {Button, Card, IconButton, Typography} from "@mui/material";
+import {deletePostApi, dislikePost, likePost} from "./firebase-client";
+import {isEmpty} from "lodash";
+import {useState} from "react";
+import {css} from '@emotion/css'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 
-const PostCard = ( {post, getPosts} ) => {
+
+
+const PostCard = ( {post, getPosts, myUsername, navigate} ) => {
+
+    let cardCSS = css`
+      align-items: center;
+      border: 1px solid black;
+      margin: 5px;
+      `
+
+
 
     const handleDelete = () => {
-        deletePostApi(post.id).then(getPosts);
+        if (post.username === myUsername) {
+            deletePostApi(post.id).then(getPosts);
+        }
     }
+
+    const likedByMe = !isEmpty(post.likes) && post.likes.includes(myUsername);
+
+    let thumbCSS = css`
+    color: ${likedByMe ? "blue" : "auto"}
+        `
 
     const handleLike = () => {
-        likePost(post, "RosaT").then(getPosts);
+
+        if (likedByMe) {
+            dislikePost(post, myUsername).then(getPosts);
+        } else {
+            likePost(post, myUsername).then(getPosts);
+        }
     }
 
-    return <Card className="CardCSS">
+    const handleNavigate = () => {
+        navigate(`/posts/${post.id}`)
+    }
+
+    return <Card className={cardCSS}>
         <Typography>{post.text}</Typography>
         { post.likes && (
         <Typography>{`Liked by: ${post.likes.join(", ")}`}</Typography>)}
-        <Button onClick={handleLike} variant="contained">Like</Button>
+        <IconButton onClick={handleLike}>{<ThumbUpIcon className={thumbCSS}/>}</IconButton>
         <Typography>{`Posted by : ${post.username}`}</Typography>
-        <Button onClick={handleDelete} variant="contained">Delete</Button>
+        { post.username === myUsername && (
+        <Button onClick={handleDelete} variant="contained">Delete</Button>)}
+        <Button onClick={handleNavigate}>See More</Button>
     </Card>
 }
 

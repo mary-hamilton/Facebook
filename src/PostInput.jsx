@@ -1,14 +1,15 @@
 import {useState} from "react";
 import {Button, TextField} from "@mui/material";
-import {getPostsApi, postPostApi} from "./firebase-client";
+import {postPostApi} from "./firebase-client";
+import PostCard from "./PostCard";
 
-const PostInput = ( { getPosts } ) => {
+const PostInput = ( { postList, getPosts, myUsername } ) => {
     let [newPost, updateNewPost] = useState(
         {
             text: "",
             likes: [],
             id: "",
-            username: "RosaT"
+            username: myUsername
         }
     )
 
@@ -22,8 +23,7 @@ const PostInput = ( { getPosts } ) => {
     }
 
     let handleSubmit = () => {
-        postPostApi(newPost, "RosaT");
-        getPosts();
+        postPostApi(newPost, myUsername).then(getPosts);
     }
 
 
@@ -34,7 +34,7 @@ const PostInput = ( { getPosts } ) => {
             onChange={handleChange}
         />
         <Button onClick={handleSubmit}>Submit</Button>
-        </>
+            </>
     )
 }
 
