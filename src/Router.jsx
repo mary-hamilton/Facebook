@@ -14,7 +14,7 @@ const Router = () => {
     const myUsername = "RosaT"
 
     const getPosts = () => {
-        getPostsApi().then(updatePostList);
+        getPostsApi().then(({ data }) => {updatePostList(data)});
     }
 
     useEffect(() => {

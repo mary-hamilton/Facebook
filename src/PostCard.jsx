@@ -1,5 +1,5 @@
 import {Button, Card, IconButton, Typography} from "@mui/material";
-import {deletePostApi, dislikePost, likePost} from "./firebase-client";
+import {deletePostApi, toggleLikePost} from "./firebase-client";
 import {isEmpty} from "lodash";
 import {useState} from "react";
 import {css} from '@emotion/css'
@@ -20,8 +20,12 @@ const PostCard = ( {post, getPosts, myUsername, navigate} ) => {
 
     const handleDelete = () => {
         if (post.username === myUsername) {
-            deletePostApi(post.id).then(getPosts);
+            deletePostApi(post._id).then(getPosts);
         }
+    }
+
+    const toggleLike = () => {
+        toggleLikePost(post, myUsername).then(getPosts);
     }
 
     const likedByMe = !isEmpty(post.likes) && post.likes.includes(myUsername);
@@ -30,24 +34,24 @@ const PostCard = ( {post, getPosts, myUsername, navigate} ) => {
     color: ${likedByMe ? "blue" : "auto"}
         `
 
-    const handleLike = () => {
-
-        if (likedByMe) {
-            dislikePost(post, myUsername).then(getPosts);
-        } else {
-            likePost(post, myUsername).then(getPosts);
-        }
-    }
+    // const handleLike = () => {
+    //
+    //     if (likedByMe) {
+    //         dislikePost(post, myUsername).then(getPosts);
+    //     } else {
+    //         likePost(post, myUsername).then(getPosts);
+    //     }
+    // }
 
     const handleNavigate = () => {
-        navigate(`/posts/${post.id}`)
+        navigate(`/posts/${post._id}`)
     }
 
     return <Card className={cardCSS}>
         <Typography>{post.text}</Typography>
-        { post.likes && (
+        { post.likes.length > 0 && (
         <Typography>{`Liked by: ${post.likes.join(", ")}`}</Typography>)}
-        <IconButton onClick={handleLike}>{<ThumbUpIcon className={thumbCSS}/>}</IconButton>
+        <IconButton onClick={toggleLike}>{<ThumbUpIcon className={thumbCSS}/>}</IconButton>
         <Typography>{`Posted by : ${post.username}`}</Typography>
         { post.username === myUsername && (
         <Button onClick={handleDelete} variant="contained">Delete</Button>)}
