@@ -1,15 +1,15 @@
 import PostCard from "./PostCard";
 
-const MyPosts = ( {postList, myUsername, getPosts, navigate}) => {
+const MyPosts = ( {client, postList, getPosts, navigate}) => {
 
-    const myPosts = postList.filter((p) => p.username === myUsername);
+    const myPosts = postList.filter((p) => p.username === client.myUsername);
 
-    if(myPosts.length > 0) {
+    if (myPosts.length > 0) {
         return (
             <>
-                <h1>{`${myUsername}'s Posts`}</h1>
+                <h1>{`${client.myUsername}'s Posts`}</h1>
                 {myPosts.map((post, i) => <PostCard key={i}
-                                                    myUsername={myUsername}
+                                                    client={client}
                                                     post={post}
                                                     getPosts={getPosts}
                                                     navigate={navigate}/>)

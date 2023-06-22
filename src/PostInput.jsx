@@ -1,12 +1,10 @@
 import {useState} from "react";
 import {Button, TextField} from "@mui/material";
-import {postPostApi} from "./firebase-client";
 
-const PostInput = ( { getPosts, myUsername } ) => {
+const PostInput = ( { client, getPosts, navigate } ) => {
     let [newPost, updateNewPost] = useState(
         {
             text: "",
-            username: myUsername,
             _id: "",
             likes: ""
         }
@@ -22,7 +20,8 @@ const PostInput = ( { getPosts, myUsername } ) => {
     }
 
     let handleSubmit = () => {
-        postPostApi(newPost, myUsername).then(getPosts);
+        client.postPostApi(newPost).then(getPosts);
+        navigate("/");
     }
 
 

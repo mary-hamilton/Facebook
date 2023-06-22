@@ -1,12 +1,13 @@
 
 import Router from "./Router";
 import {BrowserRouter} from "react-router-dom";
+import AxiosClient from "./firebase-client";
 
 const App = () => {
 
     return (
         <BrowserRouter>
-            <Router/>
+            <AxiosClient/>
         </BrowserRouter>
     );
 };
